@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
 div.radioGroupButtons { display: inline; }
 
 br { display: none; }
@@ -15,9 +17,9 @@ br { display: none; }
 h2 {
   background-color: white;
   box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  color: #2171b5;
+  color: #249bc9;
   font-size: 20px;
-  font-weight: normal;
+  font-weight: bold;
   padding: 12px 10px 12px 20px;
   margin-top: 0;
   left: 0;
@@ -28,8 +30,8 @@ h2 {
 
 h3 {
   border-bottom: 1px solid #ccc;
-  color:#6baed6;
-  font-size: 20px;
+  color: #249bc9;
+  font-size: 18px;
   font-weight: normal;
   margin-bottom: 0;
   margin-top: 0;
