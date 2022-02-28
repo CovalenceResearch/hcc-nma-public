@@ -11,100 +11,138 @@ imbrave150_data <- read.csv(file = "data/data_imbrave150.csv")
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
   model <- eventReactive(
-    c(input$SARAH,
+    c(
+      input$SARAH,
       input$SIRveNIB,
       input$REFLECT,
-      input$IMbrave150), {
-        sarah <- paste("1", "2",
-                       log((sarah_data %>%
-                              filter(subgroup == input$SARAH))$hr),
-                       (log((sarah_data %>%
-                               filter(subgroup == input$SARAH))$high) -
-                          log((sarah_data %>%
-                                 filter(subgroup == input$SARAH))$low)) / 3.92,
-                       "2", sep = "\t")
-        
-        sirvenib <- paste("1", "2",
-                          log((sirvenib_data %>%
-                                 filter(subgroup == input$SIRveNIB))$hr),
-                          (log((sirvenib_data %>%
-                                  filter(subgroup == input$SIRveNIB))$high) -
-                             log((sirvenib_data %>%
-                                    filter(subgroup == input$SIRveNIB))$low)) /
-                            3.92, "2", sep = "\t")
-    reflect <- paste("1", "3", log((reflect_data %>%
-                                      filter(subgroup == input$REFLECT))$hr),
-                     (log((reflect_data %>%
-                             filter(subgroup == input$REFLECT))$high) -
-                        log((reflect_data %>%
-                               filter(subgroup == input$REFLECT))$low)) /
-                       3.92, "2", sep = "\t")
-    imbrave150 <- paste("1", "4", log((imbrave150_data %>%
-                                         filter(subgroup == input$IMbrave150))$hr),
-                        (log((imbrave150_data %>%
-                                filter(subgroup == input$IMbrave150))$high) -
-                           log((imbrave150_data %>%
-                                  filter(subgroup == input$IMbrave150))$low)) /
-                          3.92, "2", sep = "\t")
+      input$IMbrave150
+    ),
+    {
+      sarah <- paste("1", "2",
+        log((sarah_data %>%
+          filter(subgroup == input$SARAH))$hr),
+        (log((sarah_data %>%
+          filter(subgroup == input$SARAH))$high) -
+          log((sarah_data %>%
+            filter(subgroup == input$SARAH))$low)) / 3.92,
+        "2",
+        sep = "\t"
+      )
 
-    gemtc_input <- paste("t[,1]	t[,2]	y[,2]	se[,2]	na[]",
-                         sarah,
-                         sirvenib,
-                         reflect,
-                         imbrave150, sep = "\n")
-    
-    data.src <- read.table(textConnection(gemtc_input), header = TRUE)
+      sirvenib <- paste("1", "2",
+        log((sirvenib_data %>%
+          filter(subgroup == input$SIRveNIB))$hr),
+        (log((sirvenib_data %>%
+          filter(subgroup == input$SIRveNIB))$high) -
+          log((sirvenib_data %>%
+            filter(subgroup == input$SIRveNIB))$low)) /
+          3.92, "2",
+        sep = "\t"
+      )
 
-    data <- mtc.data.studyrow(data.src,
-      armVars = c("treatment" = "t", "diff" = "y", "std.err" = "se"),
-      treatmentNames = c("Sorafenib", "SIR_Spheres", "Lenvatinib", "Atezo_Bev")
-    )
+      reflect <- paste("1", "3",
+        log((reflect_data %>%
+          filter(subgroup == input$REFLECT))$hr),
+        (log((reflect_data %>%
+          filter(subgroup == input$REFLECT))$high) -
+          log((reflect_data %>%
+            filter(subgroup == input$REFLECT))$low)) /
+          3.92, "2",
+        sep = "\t"
+      )
 
-    network <- mtc.network(data.re = data)
+      imbrave150 <- paste("1", "4",
+        log((imbrave150_data %>%
+          filter(subgroup == input$IMbrave150))$hr),
+        (log((imbrave150_data %>%
+          filter(subgroup == input$IMbrave150))$high) -
+          log((imbrave150_data %>%
+            filter(subgroup == input$IMbrave150))$low)) /
+          3.92, "2",
+        sep = "\t"
+      )
 
-    fe_model <- mtc.model(network,
-                          linearModel = "fixed",
-                          link = "identity",
-                          likelihood = "normal")
-    mcmc_fe <- mtc.run(fe_model, n.adapt = 500, n.iter = 5000, thin = 1)
+      gemtc_input <- paste("t[,1]	t[,2]	y[,2]	se[,2]	na[]",
+        sarah,
+        sirvenib,
+        reflect,
+        imbrave150,
+        sep = "\n"
+      )
 
-    forest_data <- data.frame(
-      name = c("Atezo-Bev", "Lenvatinib", "SIR-Spheres"),
-      pe = round(c(exp(relative.effect.table(mcmc_fe))[20],
-                   exp(relative.effect.table(mcmc_fe))[24],
-                   exp(relative.effect.table(mcmc_fe))[28]),
-                 digits = 2),
-      ci.l = round(c(exp(relative.effect.table(mcmc_fe))[4],
-                     exp(relative.effect.table(mcmc_fe))[8],
-                     exp(relative.effect.table(mcmc_fe))[12]),
-                   digits = 2),
-      ci.u = round(c(exp(relative.effect.table(mcmc_fe))[36],
-                     exp(relative.effect.table(mcmc_fe))[40],
-                     exp(relative.effect.table(mcmc_fe))[44]),
-                   digits = 2)
-    )
+      data.src <- read.table(textConnection(gemtc_input), header = TRUE)
 
-    forest_data$HRCI <- ifelse(is.na(forest_data$pe),
-                               "",
-                               paste(format(round(forest_data$pe, 2),
-                                            nsmall = 2),
-                                     " (",
-                                     format(round(forest_data$ci.l, 2),
-                                            nsmall = 2), "–",
-                                     format(round(forest_data$ci.u, 2),
-                                            nsmall = 2), ")",
-                                     sep = ""))
-    
-    plot_data <- cbind(c("Atezo-Bev", "Lenvatinib", "SIR-Spheres"),
-                       forest_data$HRCI)
+      data <- mtc.data.studyrow(data.src,
+        armVars = c("treatment" = "t", "diff" = "y", "std.err" = "se"),
+        treatmentNames = c("Sorafenib", "SIR_Spheres", "Lenvatinib", "Atezo_Bev")
+      )
 
-    rankplot_data <- rank.probability(mcmc_fe, preferredDirection = -1)
+      network <- mtc.network(data.re = data)
 
-    list(rankplot_data = rankplot_data,
-         forest_data = forest_data,
-         plot_data = plot_data,
-         mcmc_fe = mcmc_fe)
-  })
+      fe_model <- mtc.model(network,
+        linearModel = "fixed",
+        link = "identity",
+        likelihood = "normal"
+      )
+      
+      mcmc_fe <- mtc.run(fe_model, n.adapt = 500, n.iter = 5000, thin = 1)
+
+      forest_data <- data.frame(
+        name = c("Atezo-Bev", "Lenvatinib", "SIR-Spheres"),
+        pe = round(c(
+          exp(relative.effect.table(mcmc_fe))[20],
+          exp(relative.effect.table(mcmc_fe))[24],
+          exp(relative.effect.table(mcmc_fe))[28]
+        ),
+        digits = 2
+        ),
+        ci.l = round(c(
+          exp(relative.effect.table(mcmc_fe))[4],
+          exp(relative.effect.table(mcmc_fe))[8],
+          exp(relative.effect.table(mcmc_fe))[12]
+        ),
+        digits = 2
+        ),
+        ci.u = round(c(
+          exp(relative.effect.table(mcmc_fe))[36],
+          exp(relative.effect.table(mcmc_fe))[40],
+          exp(relative.effect.table(mcmc_fe))[44]
+        ),
+        digits = 2
+        )
+      )
+
+      forest_data$HRCI <- ifelse(is.na(forest_data$pe),
+        "",
+        paste(format(round(forest_data$pe, 2),
+          nsmall = 2
+        ),
+        " (",
+        format(round(forest_data$ci.l, 2),
+          nsmall = 2
+        ), "–",
+        format(round(forest_data$ci.u, 2),
+          nsmall = 2
+        ), ")",
+        sep = ""
+        )
+      )
+
+      plot_data <- cbind(
+        c("Atezo-Bev", "Lenvatinib", "SIR-Spheres"),
+        forest_data$HRCI
+      )
+
+      rankplot_data <- rank.probability(mcmc_fe, preferredDirection = -1)
+
+      list(
+        rankplot_data = rankplot_data,
+        forest_data = forest_data,
+        plot_data = plot_data,
+        mcmc_fe = mcmc_fe
+      )
+    }
+  )
 
   output$forestPlot <- renderPlot({
     print(model()$plot_data)
@@ -123,9 +161,13 @@ shinyServer(function(input, output) {
       },
       xlog = TRUE,
       mar = unit(c(0, 0, 0, 0), "mm"),
-      col = fpColors(box = c("#5BBF21")),
-      zero = 1, lineheight = unit(20, "mm"), colgap = unit(4, "mm"),
-      lwd.ci = 1, ci.vertices = TRUE, ci.vertices.height = 0.1,
+      col = fpColors(box = c("#2171b5")),
+      zero = 1,
+      lineheight = unit(20, "mm"),
+      colgap = unit(4, "mm"),
+      lwd.ci = 1,
+      ci.vertices = TRUE,
+      ci.vertices.height = 0.1,
       txt_gp = fpTxtGp(
         label = gpar(cex = 1.2),
         ticks = gpar(cex = 1.2),
@@ -136,19 +178,23 @@ shinyServer(function(input, output) {
 
   output$rankPlot <- renderPlot({
     plot(model()$rankplot_data,
-         beside = TRUE,
-         cex.lab = 1.3,
-         cex.axis = 1.3,
-         cex.main = 1.3,
-         cex.sub = 1.3)
+      beside = TRUE,
+      cex.lab = 1.3,
+      cex.axis = 1.3,
+      cex.main = 1.3,
+      cex.sub = 1.3,
+      col = c("#2171b5", "#6baed6", "#bdd7e7", "#eff3ff")
+    )
   })
 
   output$gelmanRubin <- renderPlot({
     gelman.plot(model()$mcmc_fe,
-                cex.lab = 1.5,
-                cex.axis = 1.5,
-                cex.main = 1.5,
-                cex.sub = 1.5)
+      cex.lab = 1.5,
+      cex.axis = 1.5,
+      cex.main = 1.5,
+      cex.sub = 1.5,
+      col = c("#2171b5", "#6baed6", "#bdd7e7", "#eff3ff")
+    )
   })
 
   output$selected <- renderUI({
@@ -160,6 +206,9 @@ shinyServer(function(input, output) {
         input$SIRveNIB,
         "<strong>IMbrave150:</strong>",
         input$IMbrave150,
-        "<strong>REFLECT:</strong>", input$REFLECT))
+        "<strong>REFLECT:</strong>",
+        input$REFLECT
+      )
+    )
   })
 })
