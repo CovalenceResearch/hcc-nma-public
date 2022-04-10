@@ -1,7 +1,7 @@
 library(shiny)
 library(shinyWidgets)
 
-# Define UI for application that draws a histogram
+# Define UI
 shinyUI(fluidPage(
   tags$head(
     tags$link(rel = "stylesheet", type = "text/css", href = "custom.css")
