@@ -8,7 +8,7 @@ sirvenib_data <- read.csv(file = "data/data_sirvenib.csv")
 reflect_data <- read.csv(file = "data/data_reflect.csv")
 imbrave150_data <- read.csv(file = "data/data_imbrave150.csv")
 
-# Define server logic required to draw a histogram
+# Define server logic
 shinyServer(function(input, output) {
   model <- eventReactive(
     c(
