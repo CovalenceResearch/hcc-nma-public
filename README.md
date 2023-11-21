@@ -1,13 +1,13 @@
 # HCC-NMA
 
-## A bit of background
+## Background
 
 Primary liver cancer is one of the most common types of cancer, and hepatocellular carcinoma (HCC) is the dominant histology of primary liver cancer.
 
 Treatment options for HCC differ by disease stage. Early and intermediate disease can often be treated curatively using resection or ablation. More advanced disease, e.g., if a patient is diagnosed (too) late, is not usually amenable to curative treatment and requires locoregional or systemic therapy instead. Important locoregional treatment options include transarterial chemoembolization and selective internal radiation therapy (SIRT). Systemic therapies were for years limited to lenvatinib and sorafenib.
 
 In 2021, results of the IMbrave150 trial demonstrated that the combination of atezolizumab and bevacizumab was superior to sorafenib, and atezo-bev has since become the standard of care. Also in 2021, but before IMbrave150 results became available, we published a [systematic literature review and Bayesian network meta-analysis](https://pubmed.ncbi.nlm.nih.gov/33131346/) (NMA) of randomized controlled trials (RCTs) for one SIRT technology, SIR-Spheres Y-90 resin microspheres, relative to sorafenib and lenvatinib, in patients not eligible for TACE. 
-As the analysis did not include results for what is now the standard of HCC care, we decided to provide an update of the analysis in the form of a Shiny app. We also took the opportunity to automate subgroup analyses, so users coud run a Bayesian NMA on subgroups of interest without having to worry about the technical implementation of a model.
+As the analysis did not include results for what is now the standard of HCC care, we decided to provide an update of the analysis in the form of a Shiny app. We also took the opportunity to automate subgroup analyses, so users could run a Bayesian NMA on subgroups of interest without having to worry about the technical specification and implementation of a model.
 
 ## How it works
 
