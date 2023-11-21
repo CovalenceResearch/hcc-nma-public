@@ -12,7 +12,9 @@ RUN apt-get update && apt-get install -y \
     libxt-dev \
     libssl-dev \
     libssh2-1-dev \
-    libglpk-dev
+    libglpk-dev \
+    jags \
+    r-cran-rjags
 
 # system requirements
 # can check Posit Package Manager as well
