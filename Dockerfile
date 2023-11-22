@@ -49,6 +49,7 @@ RUN R -q -e "renv::restore()"
 # Copy app
 COPY *.R ./
 COPY www www/
+COPY data data/
 
 EXPOSE 3838
 
