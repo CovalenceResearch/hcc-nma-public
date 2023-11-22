@@ -11,7 +11,10 @@ RUN apt-get update && apt-get install -y \
     libcairo2-dev \
     libxt-dev \
     libssl-dev \
-    libssh2-1-dev
+    libssh2-1-dev \
+    libglpk-dev \
+    jags \
+    r-cran-rjags
 
 # system requirements
 # can check Posit Package Manager as well
@@ -46,6 +49,7 @@ RUN R -q -e "renv::restore()"
 # Copy app
 COPY *.R ./
 COPY www www/
+COPY data data/
 
 EXPOSE 3838
 
