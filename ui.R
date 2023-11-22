@@ -231,6 +231,8 @@ shinyUI(fluidPage(
       plotOutput("forestPlot", height = "210px"),
       h3("Rank probabilities"),
       plotOutput("rankPlot", height = "350px"),
+      h3("Network"),
+      plotOutput("network", height = "250px"),
       h3("Gelman-Rubin-Brooks plots"),
       plotOutput("gelmanRubin", height = "350px"),
     )

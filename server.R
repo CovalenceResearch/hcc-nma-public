@@ -139,10 +139,24 @@ shinyServer(function(input, output) {
         rankplot_data = rankplot_data,
         forest_data = forest_data,
         plot_data = plot_data,
-        mcmc_fe = mcmc_fe
+        mcmc_fe = mcmc_fe,
+        network = fe_model
       )
     }
   )
+  
+  output$network <- renderPlot({
+    plot(model()$network,
+         layout = igraph::layout.circle,
+         vertex.label.family = "sans",
+         vertex.label.cex = 1.3,
+         vertex.size = 20,
+         vertex.color = "#2171b5",
+         vertex.frame.color = NA,
+         vertex.label.dist = 15,
+         vertex.label.degree = c(0, 0, pi, 0)
+    )
+  })
 
   output$forestPlot <- renderPlot({
     print(model()$plot_data)
